@@ -34,15 +34,17 @@ import type { RouteRecordRaw } from 'vue-router';
     path: '/',
     component: () => import('@/layout/index.vue'),
     redirect: '/home',
-    children: [{
-      path: 'home',
-      name: 'Home',
-      component: () => import('@/views/home/index.vue'),
-      meta: { 
-        title: '首页', 
-        icon: 'ele-HomeFilled', 
+    children: [
+      {
+        path: 'home',
+        name: 'Home',
+        component: () => import('@/views/home/index.vue'),
+        meta: { 
+          title: '首页', 
+          icon: 'ele-HomeFilled', 
+        }
       }
-    }]
+    ]
   },
 
   /* 匹配任意的路由 必须最后注册 */
