@@ -47,6 +47,50 @@ import type { RouteRecordRaw } from 'vue-router';
     ]
   },
 
+  {
+    name: 'Product', // 注意: 这里的name属性必须和我一样,按下不表
+    path: '/product',
+    component: () => import('@/layout/index.vue'),
+    meta: {
+      title: '商品管理', 
+      icon: 'ele-HomeFilled', 
+    },
+    children: [
+      {
+        name: 'Trademark',
+        path: 'trademark/list',
+        component: () => import('@/views/product/trademark/index.vue'),
+        meta: { 
+          title: '品牌管理'
+        }
+      },
+      {
+        name: 'Attr',
+        path: 'attr/list',
+        component: () => import('@/views/product/attr/index.vue'),
+        meta: { 
+          title: '平台属性管理'
+        }
+      },
+      {
+        name: 'Spu',
+        path: 'spu/list',
+        component: () => import('@/views/product/spu/index.vue'),
+        meta: { 
+          title: 'SPU管理'
+        }
+      },
+      {
+        name: 'Sku',
+        path: 'sku/list',
+        component: () => import('@/views/product/sku/index.vue'),
+        meta: { 
+          title: 'SKU管理'
+        }
+      },
+    ]
+  },
+
   /* 匹配任意的路由 必须最后注册 */
   { 
     path: '/:pathMatch(.*)', 

@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from 'axios';
+import axios, { type AxiosResponse, type AxiosRequestConfig, type AxiosRequestHeaders } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import pinia from '@/stores/index';
 import { useUserInfoStore } from '../stores/userInfo';
@@ -18,7 +18,13 @@ const service = axios.create({
 
 // 添加请求拦截器
 service.interceptors.request.use(
-	(config) => {
+	(config: AxiosRequestConfig<any>) => {
+
+		const userInfoStore = useUserInfoStore();
+		let token = userInfoStore.token;
+		if (token) {
+			(config.headers as AxiosRequestHeaders).token = token
+		}
     
 		return config;
 	}
@@ -28,6 +34,9 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   /* 约束一下response */
 	async (response: AxiosResponse<ResponseData<any>>) => {
+		// console.log("响应报文-所有服务器响应的内容都在response对象中", response)
+		// console.log("响应体-接口返回给前端的数据", response.data)
+
 		// 对响应数据做点什么
 		const res = response.data;
     if (res.code !== 20000 && res.code !== 200) { /* 成功数据的code值为20000/200 */
