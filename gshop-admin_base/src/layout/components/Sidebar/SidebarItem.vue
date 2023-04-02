@@ -1,4 +1,5 @@
 <template>
+  <!-- //侧边菜单栏是由路由中mate属性来控制显示和隐藏的 -->
   <div v-if="!item.meta || !item.meta.hidden">
     <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">

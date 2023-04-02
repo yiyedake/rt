@@ -48,46 +48,51 @@ import type { RouteRecordRaw } from 'vue-router';
   },
 
   {
-    name: 'Product', // 注意: 这里的name属性必须和我一样,按下不表
-    path: '/product',
-    component: () => import('@/layout/index.vue'),
-    meta: {
+    name:'Product',//注意，这里的name属性必须和老师的一样，后期说
+    path:'/product',
+    component:() => import('@/layout/index.vue'),
+    meta: { 
       title: '商品管理', 
-      icon: 'ele-HomeFilled', 
+      icon: 'ele-GoodsFilled', 
     },
-    children: [
+    children:[
       {
-        name: 'Trademark',
-        path: 'trademark/list',
-        component: () => import('@/views/product/trademark/index.vue'),
+        name:'Trademark',
+        path:'trademark/list',
+        component:() => import('@/views/product/trademark/index.vue'),
         meta: { 
-          title: '品牌管理'
+          title: '品牌管理' ,
+          icon:'ele-Flag'
         }
       },
       {
-        name: 'Attr',
-        path: 'attr/list',
-        component: () => import('@/views/product/attr/index.vue'),
+        name:'Attr',
+        path:'attr/list',
+        component:() => import('@/views/product/attr/index.vue'),
         meta: { 
-          title: '平台属性管理'
+          title: '平台属性管理' ,
+          icon:'ele-Cpu'
         }
       },
       {
-        name: 'Spu',
-        path: 'spu/list',
-        component: () => import('@/views/product/spu/index.vue'),
+        name:'Sku',
+        path:'sku/list',
+        component:() => import('@/views/product/sku/index.vue'),
         meta: { 
-          title: 'SPU管理'
+          title: 'SKU管理',
+          icon:'ele-Goods'
         }
       },
       {
-        name: 'Sku',
-        path: 'sku/list',
-        component: () => import('@/views/product/sku/index.vue'),
+        name:'Spu',
+        path:'spu/list',
+        component:() => import('@/views/product/spu/index.vue'),
         meta: { 
-          title: 'SKU管理'
+          title: 'SPU管理',
+          icon:'ele-Goods'
+
         }
-      },
+      }
     ]
   },
 
