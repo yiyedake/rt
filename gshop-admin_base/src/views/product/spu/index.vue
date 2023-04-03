@@ -1,7 +1,5 @@
 <template>
-    <div>
-        spu管理
-    </div>
+  <div>SPU管理</div>
 </template>
 
 <script setup lang="ts">

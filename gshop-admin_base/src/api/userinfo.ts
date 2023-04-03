@@ -39,3 +39,22 @@ export default {
     return request.post<any, null>(`/admin/acl/index/logout`)
   }
 }
+
+
+// 泛型函数
+// function fn1 () {}
+// function fn2 (n: number) {}
+// function fn3 (n: number): number {
+//   return n
+// }
+// function fn4<T>(n: T): T {
+//   return n
+// }
+// 泛型接口
+// interface ResultModel<T> {
+//   code: number,
+//   data: T,
+//   message: string
+// }
+// 什么泛型?
+// 定义的时候定义泛型,使用的时候确定泛型,泛型不是一个具体的类型

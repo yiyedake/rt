@@ -11,6 +11,11 @@ import './permission' // 路由守卫
 
 const app = createApp(App)
 
+//全局注册组件
+import CategorySelector from '@/components/CategorySelector/index.vue'
+app.component('CategorySelector',CategorySelector)
+
+
 
 ElSvg(app)
 

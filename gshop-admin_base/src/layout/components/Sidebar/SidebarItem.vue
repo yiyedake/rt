@@ -1,6 +1,11 @@
 <template>
-  <!-- //侧边菜单栏是由路由中mate属性来控制显示和隐藏的 -->
+  <!-- 侧边菜单栏是由路由中meta属性中的hidden属性来控制显示和隐藏的 -->
   <div v-if="!item.meta || !item.meta.hidden">
+    <!--
+      v-if在判断当前item(也就是路由)是不是有且仅有一个子路由
+      如果是的话,那么子路由会显示在父路由的位置
+      如果不是的话,走v-else进行递归渲染
+    -->
     <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
@@ -66,6 +71,8 @@
       default: ''
     }
   })
+  
+  // console.log(props.item)
 
   const onlyOneChild = ref<any>({})
 

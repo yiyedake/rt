@@ -1,5 +1,7 @@
 <template>
-  <div>SKU管理</div>
+    <div>
+        这是三级分类组件
+    </div>
 </template>
 
 <script setup lang="ts">
