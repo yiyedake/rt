@@ -21,11 +21,12 @@
             <template #default="{ row, $index }">
               <el-button type="warning" size="small" :icon="Edit" @click="editAttr(row)"></el-button>
 
-              <el-popconfirm :title="`确认要删除吗[${row.attrName}]吗？`" @confirm="deleteAttrValue(row)">
-            <template #reference>
-              <el-button type="danger" size="small" :icon="Delete"></el-button>
+              <el-popconfirm :title="`确认要删除[${ row.attrName }]吗?`" @confirm="deleteAttr(row)">
+                <template #reference>
+                  <el-button type="danger" size="small" :icon="Delete"></el-button>
+                </template>
+              </el-popconfirm>
             </template>
-          </el-popconfirm>
           </el-table-column>
         </el-table>
       </div>
@@ -44,7 +45,20 @@
 
         <el-table :data="attrForm.attrValueList" border class="mb-10">
           <el-table-column label="序号" type="index" width="80" align="center"></el-table-column>
-          <el-table-column label="属性值名称" prop="valueName"></el-table-column>
+          <el-table-column label="属性值名称">
+
+            <template #default="{ row, $index }">
+              <el-input
+                ref="inputRef"
+                v-if="row.inputVisible"
+                v-model="row.valueName"
+                size="small"
+                @blur="row.inputVisible = false"
+              ></el-input>
+              <div v-else @click="clickHandler(row)">{{ row.valueName }}</div>
+            </template>
+
+          </el-table-column>
           <el-table-column label="操作" width="80">
             <template #default="{ row, $index }">
               
@@ -116,12 +130,49 @@
 //        编辑保存的接口和新增的接口使用的是用一个接口,所以不用改其他内容
 //    3.4 删除
 import { Delete, Edit, Plus } from '@element-plus/icons-vue';
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import useCategoryStore from '@/stores/category';
 import attrApi, { type AttrModel } from '@/api/attr'
 import { ElMessage } from 'element-plus';
 import { cloneDeep } from 'lodash';
+import type { AttrValueModel } from '@/api/attr';
 const categoryStore = useCategoryStore()
+
+
+
+// const isShow = ref(false) // 是否展示input框 // 用一个布尔值控制input的显示和隐藏不行,因为所有的行都会用这一个变量
+// 应该是每一行用一个布尔值控制input的显示隐藏,多一行,就是多一个row,每个row上面可以帮一个布尔值
+// 自动聚焦
+const clickHandler = (row: AttrValueModel) => {
+  row.inputVisible = true // 让input框展示
+  nextTick(() => {
+    inputRef.value?.focus()
+  })
+}
+
+// input失焦
+const inputBlur = (row: AttrValueModel, index: number) => {
+  row.inputVisible = false // 切换input的显示隐藏
+  // 需要校验输入的内容
+  // 为空校验
+  if (!row.valueName.trim()) {
+    attrForm.value.attrValueList.splice(index, 1)
+    return
+  }
+  // 重复判断
+  const isRepeat = attrForm.value.attrValueList.some((item, idx) => {
+    if (index == idx) { // 把自己排除掉
+      return false
+    }
+    return item.valueName == row.valueName
+  })
+
+  if (isRepeat) {
+    ElMessage.error('输入的属性值重复,请重试')
+    attrForm.value.attrValueList.splice(index, 1)
+    return
+  }
+}
 
 
 // 编辑
@@ -130,6 +181,17 @@ const editAttr = (row: AttrModel) => {
   attrForm.value = cloneDeep(row) // 回显数据需要深拷贝
 }
 
+
+// 删除
+const deleteAttr = async (row: AttrModel) => {
+  try {
+    await attrApi.deleteAttr(row.id as number)
+    ElMessage.success('删除成功')
+    getList()
+  } catch (error) {
+    ElMessage.error('删除失败,请重试')
+  }
+}
 
 
 
@@ -143,16 +205,24 @@ const initAttrForm = () => ({ // 抽离成函数的目的是为了后面可能�
   categoryLevel: 3 // 这个写死,就是3级分类,没有2级和1级
 })
 const attrForm = ref<AttrModel>(initAttrForm())
+const inputRef = ref<HTMLInputElement>() // HTMLInputElement 这个是input标签DOM对象的类型
 // 添加属性值
 const addAttrValue = () => {
   // 这里新增的属性值应该是input框输入的内容,现在不做,先写死
   attrForm.value.attrValueList.push({
-    valueName: `xxx${ Date.now() }`
+    valueName: `xxx${ Date.now() }`,
+    inputVisible: true
+  })
+
+  // DOM更新是异步的,当设置inputVisible为true的时候,此时要显示input框,如果立刻获取的话是获取不到的,需要等待DOM的更新
+  // DOM更新完毕之后才能拿到DOM
+  nextTick(() => {
+    inputRef.value?.focus()
   })
 }
-// 删除属性值
-const deleteAttrValue = (index: number) => {
-  attrForm.value.attrValueList.splice(index, 1)
+//删除属性值
+const deleteAttrValue = (index:number) => {
+  attrForm.value.attrValueList.splice(index,1)
 }
 
 // 保存
