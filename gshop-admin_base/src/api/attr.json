@@ -1,0 +1,85 @@
+// 获取三级分类列表数据-展示
+[
+  {
+    "id": 37,
+    "attrName": "分类",
+    "categoryId": 1,
+    "categoryLevel": 3,
+    "attrValueList": [
+      {
+        "id": 33,
+        "valueName": "C#",
+        "attrId": 37
+      },
+      {
+        "id": 32,
+        "valueName": "Java",
+        "attrId": 37
+      },
+      {
+        "id": 34,
+        "valueName": "JavaScript",
+        "attrId": 37
+      }
+    ]
+  },
+  {
+    "id": 113,
+    "attrName": "跪求",
+    "categoryId": 1,
+    "categoryLevel": 3,
+    "attrValueList": [
+      {
+        "id": 191,
+        "valueName": "个位大佬不要乱删数据",
+        "attrId": 113
+      }
+    ]
+  },
+  {
+    "id": 9455,
+    "attrName": "1232",
+    "categoryId": 1,
+    "categoryLevel": 3,
+    "attrValueList": [
+      {
+        "id": 24420,
+        "valueName": "1",
+        "attrId": 9455
+      }
+    ]
+  },
+  {
+    "id": 9471,
+    "attrName": "1234567890-",
+    "categoryId": 1,
+    "categoryLevel": 3,
+    "attrValueList": [
+      {
+        "id": 24458,
+        "valueName": "23456789",
+        "attrId": 9471
+      },
+      {
+        "id": 24457,
+        "valueName": "1234567",
+        "attrId": 9471
+      }
+    ]
+  }
+]
+
+// 保存提交的数据
+{
+  "attrName": "这是属性名",
+  "attrValueList": [
+    {
+      "valueName": "这是属性值1",
+    },
+    {
+      "valueName": "这是属性值2",
+    }
+  ],
+  "categoryId": 61,
+  "categoryLevel": 3
+}

@@ -38,7 +38,7 @@
       v-model="dialogVisible"
       :title="tmForm.id ? '修改品牌' : '添加品牌'"
       width="50%"
-      @close="cancelSave"
+      @close="cancelSave(ruleFormRef)"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
@@ -128,12 +128,26 @@
 //    3.5 bug:
 //        不管在保存还是取消的时候都需要重置表单
 //    3.6 表单校验
+//        3.6.1
 //        表单校验是交给form表单去做的,需要配置如下条件:
 //        1. el-form 需要配置 :model 属性,把数据交给el-form让组件去校验
 //        2. el-form 需要配置 :rules 属性,告诉表单组件我们的校验规则是什么
 //                                        规则中定义每个字段的单独的规则,但是不知道是哪个form-item的规则
 //        3. el-form-item 配置配置 prop 属性, 告诉组件当前form-item校验的字段规则是哪个
 //        注意: 在保存之前需要校验一下表单,校验通过才能调用接口
+// 
+//        3.6.2
+//        表单自定义校验
+//            规则: validator 属性是配置自定义校验规则的函数
+//            tmName: [
+//              validator 配置自定义校验规则的函数  trigger 触发方式
+//              { validator: validateTmName, trigger: 'blur' }
+//            ]
+// 
+//        3.6.3
+//        表单对单独字段进行校验
+//            组件实例调用 validateField(字段) 方法
+//            ruleFormRef.value?.validateField('logoUrl')
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
 import { ref, onMounted, reactive } from 'vue'
 import trademarkApi, { type TrademarkListModel, type TrademarkModel } from '@/api/trademark'
@@ -142,19 +156,16 @@ import { cloneDeep } from 'lodash'
 // import type { UploadProps } from 'element-plus'
 const action = `${ import.meta.env.VITE_API_URL }/admin/product/upload`
 
-//自定义规则校验得函数
+// 自定义校验规则的函数
 const validateTmName = (rule: any, value: any, callback: any) => {
-// console.log(rule)//拿到的是校验字段
-// console.log(value)//拿到的是输入的值
-// console.log(callback)//回调函数，不传参数直接调用，校验规则通过，如果传递的是错误对象则不通过
-
-
-
+  // console.log(rule)  // 拿到的是校验的字段
+  // console.log(value) // 拿到的是输入的值
+  // console.log(callback) // 回调函数,不传参数直接调用,校验规则通过,传递一个错误对象,校验不通过
   if (value === '') {
     callback(new Error('请输入品牌名称'))
-  } else if (!(value.lenght >= 2 && value.lenght <= 10)) {
+  } else if ( !(value.length >= 2 && value.length <= 10) ) {
     callback(new Error('品牌名称长度为2到10个字'))
-  }else{
+  } else {
     callback()
   }
 }
@@ -163,15 +174,14 @@ const validateTmName = (rule: any, value: any, callback: any) => {
 // 表单校验
 const rules = reactive<FormRules>({
   // 属性名是要校验的字段,属性值是配置的规则数组,数组中放规则对象
-
   // tmName: [
   //   // required 必填    message 提示信息     触发方式: 支持 blur change
   //   { required: true, message: '品牌名必填', trigger: 'blur' },
   //   // 最短2字 最长10字       
   //   { min: 2, max: 10, message: '品牌名长度为2到10个字符', trigger: 'blur' },
   // ],
-  tmName:[
-    //validator配置自定义规则得函数  trigger触发方式
+  tmName: [
+    // validator 配置自定义校验规则的函数  trigger 触发方式
     { validator: validateTmName, trigger: 'blur' }
   ],
   logoUrl: [
