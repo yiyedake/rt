@@ -4,6 +4,7 @@ import request from '@/utils/request'
 // POST      新增BaseTrademark     /admin/product/baseTrademark/save
 // PUT       修改BaseTrademark     /admin/product/baseTrademark/update
 // GET       分页列表              /admin/product/baseTrademark/{page}/{limit}
+// GET       获取所有品牌列表       /admin/product/baseTrademark/getTrademarkList
 
 export interface TrademarkModel {
   id?: number, // 新增数据的时候,永远没有id,编辑的或者获取数据的时候,此时一定是有id的
@@ -34,5 +35,8 @@ export default {
   },
   delete(id: number) {
     return request.delete<any, null>(`/admin/product/baseTrademark/remove/${id}`)
+  },
+  getTradermarkList() {
+    return request.get<any, TrademarkModel[]>(`/admin/product/baseTrademark/getTrademarkList`)
   }
 }

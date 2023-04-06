@@ -88,6 +88,13 @@ import type { RouteRecordRaw } from 'vue-router';
           title: 'SKU管理'
         }
       },
+      {
+        path: 'test',
+        component: () => import('@/views/product/test/index.vue'),
+        meta: { 
+          title: 'TEST管理'
+        }
+      },
     ]
   },
 

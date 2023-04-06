@@ -4,20 +4,12 @@ import request from '@/utils/request'
 // DELETE  deleteAttr      /admin/product/deleteAttr/{attrId}
 // POST    saveAttrInfo    /admin/product/saveAttrInfo
 
-
 export interface AttrValueModel {
   id?: number,
   valueName: string,
   attrId?: number,
   // -----------------------
   inputVisible?: boolean // 这个值是我们手动添加的,后端不要,前端控制input显示使用
-}
-
-
-export interface AttrValueModel {
-  id?: number,
-  valueName: string,
-  attrId?: number
 }
 
 export interface AttrModel {
@@ -34,5 +26,8 @@ export default {
   },
   saveAttrInfo(data: AttrModel) {
     return request.post<any, null>(`/admin/product/saveAttrInfo`, data)
+  },
+  deleteAttr(attrId: number) {
+    return request.delete<any, null>(`/admin/product/deleteAttr/${attrId}`)
   }
 }

@@ -53,7 +53,7 @@
                 v-if="row.inputVisible"
                 v-model="row.valueName"
                 size="small"
-                @blur="row.inputVisible = false"
+                @blur="inputBlur(row, $index)"
               ></el-input>
               <div v-else @click="clickHandler(row)">{{ row.valueName }}</div>
             </template>
@@ -149,7 +149,6 @@ const clickHandler = (row: AttrValueModel) => {
     inputRef.value?.focus()
   })
 }
-
 // input失焦
 const inputBlur = (row: AttrValueModel, index: number) => {
   row.inputVisible = false // 切换input的显示隐藏
@@ -173,6 +172,8 @@ const inputBlur = (row: AttrValueModel, index: number) => {
     return
   }
 }
+
+
 
 
 // 编辑
@@ -210,7 +211,7 @@ const inputRef = ref<HTMLInputElement>() // HTMLInputElement 这个是input标�
 const addAttrValue = () => {
   // 这里新增的属性值应该是input框输入的内容,现在不做,先写死
   attrForm.value.attrValueList.push({
-    valueName: `xxx${ Date.now() }`,
+    valueName: ``,
     inputVisible: true
   })
 
@@ -220,9 +221,9 @@ const addAttrValue = () => {
     inputRef.value?.focus()
   })
 }
-//删除属性值
-const deleteAttrValue = (index:number) => {
-  attrForm.value.attrValueList.splice(index,1)
+// 删除属性值
+const deleteAttrValue = (index: number) => {
+  attrForm.value.attrValueList.splice(index, 1)
 }
 
 // 保存
