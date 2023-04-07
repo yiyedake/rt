@@ -4,9 +4,9 @@
       <CategorySelector :disabled="status != STATUS.SPULIST"></CategorySelector>
     </el-card>
     <el-card>
-      <SpuList v-if="status == STATUS.SPULIST" v-model="status"></SpuList>
-      <SpuForm v-if="status == STATUS.SPUFORM" v-model="status"></SpuForm>
-      <SkuForm v-if="status == STATUS.SKUFORM" v-model="status"></SkuForm>
+      <SpuList v-if="status == STATUS.SPULIST" v-model="status" @spuInfo="changeSpuInfo"></SpuList>
+      <SpuForm v-if="status == STATUS.SPUFORM" v-model="status" :spuInfo="spuInfo" @spuInfo="changeSpuInfo"></SpuForm>
+      <SkuForm v-if="status == STATUS.SKUFORM" v-model="status" :spuInfo="spuInfo"></SkuForm>
     </el-card>
   </div>
 </template>
@@ -40,16 +40,36 @@ export enum STATUS {
 //                           如果没有三级分类数据,清空数据列表
 //    2.3 分页迥乎
 // 3. 新增SPU界面 - 详情参见 spuform组件注释
+// 4. 编辑SPU界面 - 详情参见 spuform组件注释
+// 5. 删除SPU
+//    准备api
+//    双重校验通过之后,调用接口即可
+// 6. 新增SKU - 详情参见 skuform组件
 import SpuList from './components/spuList/index.vue'
 import SpuForm from './components/spuForm/index.vue'
 import SkuForm from './components/skuForm/index.vue'
 import { ref } from 'vue';
+import type { SpuModel } from '@/api/spu';
+import { cloneDeep } from 'lodash';
 
 const status = ref(STATUS.SPULIST)
 
 // const changeStatus = (n: number) => {
 //   status.value = n
 // }
+
+const initSpuForm = () => ({
+  category3Id: undefined, // 这个数据在最后保存之前去收集
+  spuName: '',
+  description: '',
+  tmId: undefined,
+  spuSaleAttrList: [],
+  spuImageList: []
+})
+const spuInfo = ref<SpuModel>(initSpuForm())
+const changeSpuInfo = (row: SpuModel | undefined) => {
+  spuInfo.value = row ? cloneDeep(row) : initSpuForm()
+}
 </script>
 
 <style scoped>

@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-button type="primary" :icon="Plus" @click="addSpu" class="mb-10">新增SPU</el-button>
-    <!-- <el-button type="primary" @click="addSku">新增SKU</el-button> -->
 
     <el-table :data="spuList" border class="mb-10">
       <el-table-column type="index" label="序号" width="80" align="center"></el-table-column>
@@ -9,10 +8,15 @@
       <el-table-column label="SPU描述" prop="description"></el-table-column>
       <el-table-column label="操作" width="240">
         <template #default="{ row, $index }">
-          <el-button type="success" size="small" :icon="Plus"></el-button>
-          <el-button type="warning" size="small" :icon="Edit"></el-button>
-          <el-button type="info" size="small" :icon="InfoFilled"></el-button>
-          <el-button type="danger" size="small" :icon="Delete"></el-button>
+          <el-button type="success" size="small" :icon="Plus" title="添加SKU" @click="addSku(row)"></el-button>
+          <el-button type="warning" size="small" :icon="Edit" @click="editSpu(row)" title="编辑SPU"></el-button>
+          <el-button type="info" size="small" :icon="InfoFilled" title="查看SKU列表"></el-button>
+          
+          <el-popconfirm :title="`确定要删除[${ row.spuName }]吗?`" @confirm="deleteSpu(row)">
+            <template #reference>
+              <el-button type="danger" size="small" :icon="Delete" title="删除SPU"></el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -42,7 +46,8 @@ interface EmitsModel {
   // 参数一: 规定a的类型,是一个值得类型
   // 参数二: 规定了n的类型,是一个number类型
   // : void 规定的是返回值的类型
-  (a: 'update:modelValue', n: number): void
+  (a: 'update:modelValue', n: number): void,
+  (e: 'spuInfo', row: SpuModel): void
 }
 const emits = defineEmits<EmitsModel>()
 
@@ -51,8 +56,27 @@ const addSpu = () => {
   emits('update:modelValue', STATUS.SPUFORM)
 }
 
+// 编辑
+const editSpu = (row: SpuModel) => {
+  emits('update:modelValue', STATUS.SPUFORM) // 切换spuform
+  emits('spuInfo', row) // 数据传递给父组件
+}
+
+// 删除
+const deleteSpu = async (row: SpuModel) => {
+  try {
+    await spuApi.deleteSpu(row.id!)
+    ElMessage.success('删除成功')
+    getPage() // 重新获取数据
+  } catch (error) {
+    ElMessage.error('删除失败,请重试')
+  }
+}
+
+
 // 新增SKU
-const addSku = () => {
+const addSku = (row: SpuModel) => {
+  emits('spuInfo', row)
   emits('update:modelValue', STATUS.SKUFORM)
 }
 
