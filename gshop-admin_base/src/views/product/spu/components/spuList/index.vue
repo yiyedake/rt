@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-button type="primary" :icon="Plus" @click="addSpu" class="mb-10">新增SPU</el-button>
+    <el-button
+      type="primary"
+      :icon="Plus"
+      @click="addSpu"
+      class="mb-10"
+      :disabled="!categoryStore.category3Id"
+    >新增SPU</el-button>
 
     <el-table :data="spuList" border class="mb-10">
       <el-table-column type="index" label="序号" width="80" align="center"></el-table-column>
@@ -10,7 +16,7 @@
         <template #default="{ row, $index }">
           <el-button type="success" size="small" :icon="Plus" title="添加SKU" @click="addSku(row)"></el-button>
           <el-button type="warning" size="small" :icon="Edit" @click="editSpu(row)" title="编辑SPU"></el-button>
-          <el-button type="info" size="small" :icon="InfoFilled" title="查看SKU列表"></el-button>
+          <el-button type="info" size="small" :icon="InfoFilled" title="查看SKU列表" @click="showSkuList(row)"></el-button>
           
           <el-popconfirm :title="`确定要删除[${ row.spuName }]吗?`" @confirm="deleteSpu(row)">
             <template #reference>
@@ -30,6 +36,24 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+
+    <el-dialog
+      v-model="dialogVisible"
+      :title="`[${dialogTitle}]的sku列表`"
+      width="80%"
+      @close="skuList = []"
+    >
+      <el-table :data="skuList" size="small" v-loading="isLoading">
+        <el-table-column label="名称" prop="skuName"/>
+        <el-table-column label="价格" prop="price"/>
+        <el-table-column label="重量" prop="weight"/>
+        <el-table-column label="图片">
+          <template #default="{ row, $index }">
+            <img :src="row.skuDefaultImg" style="width: 60px;height: 60px;">
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
     
   </div>
 </template>
@@ -39,8 +63,10 @@ import { Delete, Edit, InfoFilled, Plus } from '@element-plus/icons-vue'
 import { STATUS } from '../../index.vue'
 import { ref, watch } from 'vue'
 import spuApi, { type SpuModel } from '@/api/spu'
+import skuApi from '@/api/sku'
 import useCategoryStore from '@/stores/category'
 import { ElMessage } from 'element-plus'
+import type { SkuModel } from '@/api/sku'
 const categoryStore = useCategoryStore()
 interface EmitsModel {
   // 参数一: 规定a的类型,是一个值得类型
@@ -78,6 +104,25 @@ const deleteSpu = async (row: SpuModel) => {
 const addSku = (row: SpuModel) => {
   emits('spuInfo', row)
   emits('update:modelValue', STATUS.SKUFORM)
+}
+
+// 查看SKU列表
+const dialogTitle = ref('')
+const dialogVisible = ref(false)
+const skuList = ref<SkuModel[]>([]) // 存储列表展示数据
+const isLoading = ref(false)
+const showSkuList = async (row: SpuModel) => {
+  dialogVisible.value = true
+  dialogTitle.value = row.spuName
+  isLoading.value = true;
+  try {
+    let result = await skuApi.findBySpuId(row.id!)
+    skuList.value = result;
+  } catch (error) {
+    ElMessage.error('获取sku列表数据失败,请重试')
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 

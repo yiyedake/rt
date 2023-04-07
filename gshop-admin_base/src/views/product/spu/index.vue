@@ -6,7 +6,7 @@
     <el-card>
       <SpuList v-if="status == STATUS.SPULIST" v-model="status" @spuInfo="changeSpuInfo"></SpuList>
       <SpuForm v-if="status == STATUS.SPUFORM" v-model="status" :spuInfo="spuInfo" @spuInfo="changeSpuInfo"></SpuForm>
-      <SkuForm v-if="status == STATUS.SKUFORM" v-model="status" :spuInfo="spuInfo"></SkuForm>
+      <SkuForm v-if="status == STATUS.SKUFORM" v-model="status" :spuInfo="spuInfo" @spuInfo="changeSpuInfo"></SkuForm>
     </el-card>
   </div>
 </template>
@@ -45,6 +45,8 @@ export enum STATUS {
 //    准备api
 //    双重校验通过之后,调用接口即可
 // 6. 新增SKU - 详情参见 skuform组件
+// 7. 查看SKU列表
+//    点击"查看SKU列表"按钮,调用接口,拿到数据,弹出弹框,展示数据
 import SpuList from './components/spuList/index.vue'
 import SpuForm from './components/spuForm/index.vue'
 import SkuForm from './components/skuForm/index.vue'

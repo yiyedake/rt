@@ -18,6 +18,8 @@ export interface SpuImageModel {
   name?: string, // 前端会用到这三个数据
   response?: any,
   url?: string
+  // --------------
+  isDefault?: string
 }
 
 export interface SpuSaleAttrValueModel {
@@ -37,6 +39,8 @@ export interface SpuSaleAttrModel {
   // ------------------------------
   inputVisible?: boolean // 控制按钮和input框切换显示
   inputValue?: string // 用来收集当前输入的销售属性值,绑定在销售属性上
+  // ------------------------------
+  attrIdValueId?: string
 }
 
 export interface SaleAttrModel {
